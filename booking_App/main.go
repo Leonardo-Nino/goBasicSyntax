@@ -5,25 +5,28 @@ import (
 	"strings"
 )
 
+// globals vars
+
+const tickets = 50 //  declaration constant	(no Sugar posible )
+var appName string = "Leo first App in Go"
+var remainingTickets uint = tickets // 	declaration variable (tradicional, type)
+var bookings = []string{}           // 	declaration slice (tradicional )
+
+//alternative syntax
+
+//appName := "Leo first App in Go"    // declaration variable (Sugar, no type)
+//bookings := []string 				//   declaration Slice(tradicional)
+//var boolings [50] string          //   declaration Array (length fixed)
+
 func main() {
 
 	//                           -------intro app-------
 
-	appName := "Leo first App in Go"    // 	declaration variable (Sugar, no type)
-	const tickets = 50                  //  declaration constant	(no Sugar posible )
-	var remainingTickets uint = tickets // 	declaration variable (tradicional, type)
-	bookings := []string{}              // 	declaration slice (Sugar)
-
-	//var bookings[]string 				//  declaration Slice(tradicional)
-	//var boolings [50] string          //  declaration Array (length fixed)
-
-	fmt.Println("Welcome to Leo's App")
-	fmt.Printf("The name of the App is : %v.\n ", appName)
-	fmt.Printf("Total tickets: %v, Remain ticket: %v\n  ", tickets, remainingTickets)
+	greetings()
 
 	//               	 		-------app logic ---------
 
-	for { //infinity loop
+	for { //infinity loop if no condition
 
 		var userName string
 		var lastname string
@@ -44,9 +47,13 @@ func main() {
 		fmt.Println("Please number of tickets: ")
 		fmt.Scan(&userTickets)
 
-		// Check ticket avaible
+		// Check ticket avaible and data imput
 
-		if userTickets <= remainingTickets { //if else structure
+		isValidName, isvalidEmail, isValidNumberTicket := validImputs(userName, lastname, userEmail, userTickets)
+
+		// login for Bookings
+
+		if isValidName && isvalidEmail && isValidNumberTicket { //if else structure
 
 			// Decrease  ticket avaible
 
@@ -64,17 +71,10 @@ func main() {
 			fmt.Printf("Thanks %v %v. You booked %v tickets. You will receive a confirmation at %v \n", userName, lastname, userTickets, userEmail)
 			fmt.Printf("Total tickets: %v, Remain ticket: %v\n", tickets, remainingTickets)
 
-			onlyFirsNames := []string{}
+			// Print first name
 
-			for _, elementBooking := range bookings { //for each loop ("index" instead of "_" if need index)
-
-				names := strings.Fields(elementBooking) //split function => "Leonardo Niño" ["Leonardo","Niño"]
-
-				onlyFirsNames = append(onlyFirsNames, names[0])
-
-			}
-
-			fmt.Printf("All bookings: %v\n", onlyFirsNames)
+			firstNameToPrint := firstName()
+			fmt.Printf("All bookings: %v\n", firstNameToPrint)
 
 			if remainingTickets == 0 {
 				println("Sorry we are sold out")
@@ -82,12 +82,44 @@ func main() {
 			}
 
 		} else {
+			if !isValidName {
+				fmt.Printf("Sorry, your first name or last name is to short \n")
+			}
 
-			fmt.Printf("Sorry, You can't book %v tickets beacause are only %v left \n", userTickets, remainingTickets)
-			//continue start next iteration of the loop (skip the code below if true)
+			if !isValidNumberTicket {
+				fmt.Printf("Sorry, You can't book %v tickets because are only %v left \n", userTickets, remainingTickets)
+				//continue start next iteration of the loop (skip the code below if true)
+			}
+
+			if !isvalidEmail {
+				fmt.Printf("Sorry, your Email have incorrect input\n")
+
+			}
 
 		}
 
 	}
 
+}
+
+func greetings() {
+	fmt.Println("Welcome to Leo's App")
+	fmt.Printf("The name of the App is : %v.\n ", appName)
+	fmt.Printf("Total tickets: %v, Remain ticket: %v\n  ", tickets, remainingTickets)
+}
+
+func firstName() []string {
+	onlyFirsNames := []string{}
+	for _, elementBooking := range bookings { //for each loop ("index" instead of "_" if need index)
+		names := strings.Fields(elementBooking) //split function => "Leonardo Niño" ["Leonardo","Niño"]
+		onlyFirsNames = append(onlyFirsNames, names[0])
+	}
+	return onlyFirsNames
+}
+
+func validImputs(userName string, lastName string, userEmail string, userTickets uint) (bool, bool, bool) {
+	isValidName := len(userName) >= 2 && len(lastName) >= 2
+	isvalidEmail := strings.Contains(userEmail, "@")
+	isValidNumberTicket := userTickets <= remainingTickets
+	return isValidName, isvalidEmail, isValidNumberTicket
 }
