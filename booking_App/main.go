@@ -1,6 +1,7 @@
 package main
 
 import (
+	helper "booking_App/helpers"
 	"fmt"
 	"strings"
 )
@@ -36,7 +37,7 @@ func main() {
 		//ask user info
 
 		fmt.Println("Please enter your first name: ")
-		fmt.Scan(&userName) // pointer!!!!!!!! Scan inputs
+		fmt.Scan(&userName) // pointer becouse I will modificate the value of a  var in a Function !!!!!!!! Scan inputs
 
 		fmt.Println("Please enter your last name: ")
 		fmt.Scan(&lastname)
@@ -49,7 +50,7 @@ func main() {
 
 		// Check ticket avaible and data imput
 
-		isValidName, isvalidEmail, isValidNumberTicket := validImputs(userName, lastname, userEmail, userTickets)
+		isValidName, isvalidEmail, isValidNumberTicket := helper.ValidImputs(userName, lastname, userEmail, userTickets, remainingTickets)
 
 		// login for Bookings
 
@@ -115,11 +116,4 @@ func firstName() []string {
 		onlyFirsNames = append(onlyFirsNames, names[0])
 	}
 	return onlyFirsNames
-}
-
-func validImputs(userName string, lastName string, userEmail string, userTickets uint) (bool, bool, bool) {
-	isValidName := len(userName) >= 2 && len(lastName) >= 2
-	isvalidEmail := strings.Contains(userEmail, "@")
-	isValidNumberTicket := userTickets <= remainingTickets
-	return isValidName, isvalidEmail, isValidNumberTicket
 }
